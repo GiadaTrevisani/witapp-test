@@ -18,8 +18,8 @@ from django.urls import include, path
 from polls.views import signup
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('polls/', include('polls.urls')),
-    path('accounts/register/', signup , name='register'),
+    path("admin/", admin.site.urls),
+    path("polls/", include("polls.urls")),
+    path("accounts/register/", signup, name="register"),
     path("accounts/", include("django.contrib.auth.urls")),
 ]
