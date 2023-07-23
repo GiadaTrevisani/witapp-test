@@ -1,5 +1,39 @@
 {% extends "polls/base.html" %}
-
+{% block title %}Profile Page{% endblock title %}
 {% block content %}
-{{ user }}
+{% if user_form.errors %}
+<div class="alert alert-danger alert-dismissible" role="alert">
+    <div id="form_errors">
+        {% for key, value in user_form.errors.items %}
+        <strong>{{ value }}</strong>
+        {% endfor %}
+    </div>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+<div class="form-content">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="col-md-5">
+                {% for field in user_form %}
+                <p>
+                    {% if field.errors %}
+                <ul class="errorlist">
+                    {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {{ field.label_tag }} {{ field }}
+                </p>
+                {% endfor %}
+            </div>
+        </div>
+        <br><br>
+        <button type="submit" class="btn btn-dark btn-lg">Save Changes</button>
+    </form>
+</div>
 {% endblock content %}
