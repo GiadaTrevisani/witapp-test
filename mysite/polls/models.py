@@ -3,8 +3,16 @@ import datetime
 from django.db import models
 from django.utils import timezone
 from django.contrib import admin
+from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
+class User(AbstractUser):
+    birth_place = models.TextField(max_length=500, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    address = models.TextField(max_length=500, blank=True)
+
+    def __str__(self) -> str:
+        return f"{self.id} {self.username} {self.address}"
+
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')

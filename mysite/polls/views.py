@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from .forms import RegisterForm
+from django.contrib.auth import login
 
 from .models import Question, Choice
 # Create your views here.
@@ -50,7 +52,24 @@ def vote(request, question_id):
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
-# When somebody vote -> redirects to the results page for the question
-# def results(request, question_id):
-#     question = get_object_or_404(Question, pk=question_id)
-#     return render(request, 'polls/results.html', {'question': question})
+def user(request):
+    if request.user.is_authenticated:
+        return render(request, 'polls/user.html', {'user':request.user})
+    else:
+        HttpResponseRedirect('/polls/')
+
+def signup(request):
+    if request.method == 'GET':
+        form = RegisterForm()
+        return render(request, 'registration/register.html', { 'form': form})
+
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request, user)
+            return HttpResponseRedirect('/polls/')
+        else:
+            return render(request, 'registration/register.html', { 'form': form})
